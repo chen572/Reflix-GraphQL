@@ -1,7 +1,7 @@
 import React, { Component, ComponentClass } from 'react';
 import { graphql, Mutation } from 'react-apollo';
 import flowRight from 'lodash.flowright';
-import { getAllMovies, getUserById, addMovieToUser } from '../queries/queries';
+// import { getAllMovies, getUserById, addMovieToUser } from '../queries/queries';
 
 class Catalog extends Component {
   constructor() {
@@ -31,6 +31,6 @@ class Catalog extends Component {
 }
 
 export default flowRight(
-  graphql(getUserById, { name: 'getUserByIdQuery', options: {variables: } }),
+  // graphql(getUserById, { name: 'getUserByIdQuery', options: {variables: } }),
   graphql(getAllMovies, { name: 'getAllMOviesQuery' }),
 )(Catalog);

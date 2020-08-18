@@ -5,6 +5,9 @@ import { resolvers } from './server/resolvers/resolver';
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  engine: {    
+    reportSchema: true,
+  }
 });
 
 server.listen().then(({ url }) => {

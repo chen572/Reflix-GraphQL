@@ -1,13 +1,21 @@
-import { gql } from 'apollo-boost';
+import { gql } from "apollo-boost";
 
-export const getAllMovies = gql`
-  {
-    movies {
-      id
-      title
-      year
-      descrShort
-      img
+export const MOVIE_TILE_DATA = gql`
+  fragment MovieTile on Movie {
+    
+  } 
+`
+
+export const GET_ALL_MOVIES = gql`
+  query GetAllMovies {
+    {
+      movies {
+        id
+        title
+        year
+        descrShort
+        img
+      }
     }
   }
 `;
@@ -35,8 +43,7 @@ export const getAllUsers = gql`
 `;
 
 export const getUserById = gql`
-query GetUserById($id: String!)
-  {
+  query GetUserById($id: String!) {
     user(id: $id) {
       id
       name
