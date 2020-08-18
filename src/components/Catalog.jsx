@@ -1,15 +1,16 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
-import { GET_USER_BY_ID } from '../queries/queries'
+import { GET_USER_BY_ID, GET_ALL_MOVIES } from '../queries/queries'
 
 function Catalog(props) {
   const { match } = props
   console.log(match.params.userId)
-  const { data, loading, error } = useQuery(GET_USER_BY_ID, {
+  const getUserById = useQuery(GET_USER_BY_ID, {
     variables: { id: match.params.userId },
   })
-  console.log(data)
-  return <div>{}</div>
+  const getMovies = useQuery(GET_ALL_MOVIES)
+  console.log(getUserById.data, getMovies.data)
+  return <div></div>
 }
 
 export default Catalog

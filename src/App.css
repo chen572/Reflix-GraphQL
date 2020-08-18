@@ -13,3 +13,8 @@
   display: flex;
   position: relative;
 }
+
+.top-links {
+  margin: 10px;
+  text-decoration: none;
+}
