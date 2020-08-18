@@ -38,8 +38,8 @@ export const GET_ALL_USERS = gql`
   }
 `
 
-export const getUserById = gql`
-  query GetUserById($id: String!) {
+export const GET_USER_BY_ID = gql`
+  query GetUserById($id: ID!) {
     user(id: $id) {
       id
       name

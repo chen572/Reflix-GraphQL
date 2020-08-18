@@ -1,14 +1,15 @@
-import React, { Component, ComponentClass } from 'react';
-import { graphql, Mutation } from 'react-apollo';
-import flowRight from 'lodash.flowright';
-// import { getAllMovies, getUserById, addMovieToUser } from '../queries/queries';
+import React from 'react'
+import { useQuery } from '@apollo/client'
+import { GET_USER_BY_ID } from '../queries/queries'
 
-function Catalog() {
-
-    // const test = this.props.getUserById ? this.props.getUserById : null;
-    // console.log(test);
-    // console.log(this.props);
-    return <div>{}</div>;
+function Catalog(props) {
+  const { match } = props
+  console.log(match.params.userId)
+  const { data, loading, error } = useQuery(GET_USER_BY_ID, {
+    variables: { id: match.params.userId },
+  })
+  console.log(data)
+  return <div>{}</div>
 }
 
 export default Catalog

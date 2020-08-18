@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
 import Landing from './components/Landing'
 import Catalog from './components/Catalog.jsx'
 import { Button, Icon, makeStyles, Typography } from '@material-ui/core'
-import { gql, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { GET_ALL_USERS } from './queries/queries'
 
 const useStyles = makeStyles({
@@ -60,7 +60,7 @@ function App() {
         <Route
           exact
           path='/catalog/:userId'
-          render={({ match }) => <Catalog />}
+          render={({ match }) => <Catalog match={match} />}
         />
       </div>
     </Router>
