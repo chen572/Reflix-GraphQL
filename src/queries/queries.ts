@@ -1,46 +1,42 @@
-import { gql } from "apollo-boost";
+import { gql } from 'apollo-boost'
 
 export const MOVIE_TILE_DATA = gql`
   fragment MovieTile on Movie {
-    
-  } 
+    id
+    title
+    year
+    descrShort
+    img
+  }
 `
 
 export const GET_ALL_MOVIES = gql`
   query GetAllMovies {
-    {
-      movies {
-        id
-        title
-        year
-        descrShort
-        img
-      }
+    movies {
+      ...MovieTile
     }
   }
-`;
+  ${MOVIE_TILE_DATA}
+`
 
 export const getMovieById = gql`
   {
     movie(id: string) {
-      id
-      title
-      year
-      descrShort
-      img
+      ...MovieTile
     }
   }
-`;
+  ${MOVIE_TILE_DATA}
+`
 
-export const getAllUsers = gql`
-  {
+export const GET_ALL_USERS = gql`
+  query GetAllUsers {
     users {
       id
       name
       budget
     }
   }
-`;
+`
 
 export const getUserById = gql`
   query GetUserById($id: String!) {
@@ -49,16 +45,12 @@ export const getUserById = gql`
       name
       budget
       rentedMovies {
-        title
-        id
-        img
-        year
-        descrShort
-        id
+        ...MovieTile
       }
     }
   }
-`;
+  ${MOVIE_TILE_DATA}
+`
 
 export const addMovieToUser = gql`
   mutation($userId: String!, $movieId: String!) {
@@ -66,4 +58,4 @@ export const addMovieToUser = gql`
       id
     }
   }
-`;
+`

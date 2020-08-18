@@ -1,6 +1,15 @@
+:root {
+  --primery-color: whitesmoke;
+}
+
 .App {
   background-color: black;
-  display: flex;
+  z-index: -1;
   width: 100vw;
   height: 100vh;
+}
+
+.button-container {
+  display: flex;
+  position: relative;
 }
