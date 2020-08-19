@@ -6,7 +6,7 @@ import { GET_ALL_USERS } from '../queries/queries';
 import { Link } from 'react-router-dom';
 
 function Landing(props) {
-  const { loading, error, data } = useQuery(GET_ALL_USERS);
+  const { loading, data } = useQuery(GET_ALL_USERS);
 
   function getRandomColor() {
     const colors = ['#ffddd2', '#92140c', 'lightblue', '#c2f261'];

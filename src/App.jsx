@@ -6,11 +6,6 @@ import Catalog from './components/Catalog.jsx';
 import NavBar from './components/NavBar';
 
 function App() {
-  function renderList() {
-    if (this.state.movies.length) {
-      return this.state.movies.map((m) => <div key={m.id}>{m.title}</div>);
-    }
-  }
 
   return (
     <Router>

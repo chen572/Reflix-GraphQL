@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Typography, Button, Icon, makeStyles } from '@material-ui/core';
+import { Typography, Icon, makeStyles } from '@material-ui/core';
+import Buttons from './Button'
 
 const useStyles = makeStyles({
   root: {
@@ -16,16 +17,12 @@ function NavBar() {
   const classes = useStyles();
 
   return (
-    <div className='button-container'>
+    <div className='bar-container'>
       <Link className='top-links' to='/'>
-        <Button style={{ color: 'whitesmoke' }}>
-          <Typography variant='h6'>Home</Typography>
-        </Button>
+        <Buttons text="Home" />
       </Link>
       <Link className='top-links' to='/catalog'>
-        <Button style={{ color: 'whitesmoke' }}>
-          <Typography variant='h6'>Catalog</Typography>
-        </Button>
+        <Buttons text="Catalog" />
       </Link>
       <Typography variant='h4' className={classes.root}>
         <Icon
