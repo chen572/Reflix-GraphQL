@@ -52,10 +52,13 @@ export const GET_USER_BY_ID = gql`
   ${MOVIE_TILE_DATA}
 `;
 
-export const addMovieToUser = gql`
-  mutation($userId: String!, $movieId: String!) {
+export const ADD_MOVIE_TO_USER = gql`
+  mutation AddMovieToUser($userId: ID!, $movieId: ID!) {
     addMovieToUser(userId: $userId, movieId: $movieId) {
-      id
+      rentedMovies {
+        ...MovieTile
+      }
     }
   }
+  ${MOVIE_TILE_DATA}
 `;

@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Card,
-  CardActionArea,
-  makeStyles,
-  Grid,
-  Button,
-} from '@material-ui/core';
+import { Card, CardActionArea, makeStyles, Grid } from '@material-ui/core';
 import Buttons from './Button';
 
 const useStyles = makeStyles({
@@ -27,17 +21,19 @@ const useStyles = makeStyles({
 
 function MovieCard(props) {
   const classes = useStyles();
-  const { movie } = props;
-
+  const { movie, onClickHandler } = props;
+  console.log(` this is the movie id ${movie.id}`)
   return (
     <Grid item className={classes.root}>
       <Card>
-        <CardActionArea className={classes.actionArea}>
+        <CardActionArea
+          onClick={() => onClickHandler(movie.id)}
+          className={classes.actionArea}
+        >
           <img
             className={classes.media}
             src={movie.img}
-            alt={movie.title}
-            title={movie.title}
+            alt={movie.id}
           />
         </CardActionArea>
         <CardActionArea className={classes.actionArea}>

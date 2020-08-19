@@ -26,6 +26,6 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    addMovieToUser(userId: String!, movieId: String!): User
+    addMovieToUser(userId: ID!, movieId: ID!): User
   }
 `
