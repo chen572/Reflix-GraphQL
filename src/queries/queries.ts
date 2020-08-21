@@ -33,7 +33,6 @@ export const GET_ALL_USERS = gql`
     users {
       id
       name
-      budget
     }
   }
 `;
@@ -54,11 +53,16 @@ export const GET_USER_BY_ID = gql`
 
 export const ADD_MOVIE_TO_USER = gql`
   mutation AddMovieToUser($userId: ID!, $movieId: ID!) {
-    addMovieToUser(userId: $userId, movieId: $movieId) {
-      rentedMovies {
-        ...MovieTile
-      }
+    AddMovieToUser(userId: $userId, movieId: $movieId) {
+      id
     }
   }
-  ${MOVIE_TILE_DATA}
+`;
+
+export const REMOVE_MOVIE_FROM_USER = gql`
+  mutation RemoveMovieFromUser($userId: ID!, $movieId: ID!) {
+    RemoveMovieFromUser(userId: $userId, movieId: $movieId) {
+      id
+    }
+  }
 `;

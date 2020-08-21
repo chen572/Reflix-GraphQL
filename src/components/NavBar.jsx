@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Typography, Icon, makeStyles } from '@material-ui/core';
-import Buttons from './Button'
+import Buttons from './Button';
 
 const useStyles = makeStyles({
   root: {
@@ -15,14 +15,15 @@ const useStyles = makeStyles({
 
 function NavBar() {
   const classes = useStyles();
+  const { goBack } = useHistory();
 
   return (
     <div className='bar-container'>
       <Link className='top-links' to='/'>
-        <Buttons text="Home" />
+        <Buttons text='Home' />
       </Link>
-      <Link className='top-links' to='/catalog'>
-        <Buttons text="Catalog" />
+      <Link className='top-links' to='' onClick={goBack}>
+        <Buttons text='Back' />
       </Link>
       <Typography variant='h4' className={classes.root}>
         <Icon
@@ -40,4 +41,4 @@ function NavBar() {
   );
 }
 
-export default NavBar
+export default NavBar;

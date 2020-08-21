@@ -23,10 +23,27 @@ export const resolvers = {
     },
   },
   Mutation: {
-    async addMovieToUser(_, args: { movieId: String; userId: String }) {
+    async AddMovieToUser(_, args: { movieId: String; userId: String }) {
+      const user = await User.findById(args.userId).populate('rentedMovies');
       const movie = await Movie.findById(args.movieId);
-      const user = await User.findById(args.userId);
-      user.rentedMovies.push(movie);
+      const isMovieRented = user.rentedMovies.find(
+        (m) => String(m._id) === String(movie._id)
+      );
+      if (!isMovieRented) {
+        user.rentedMovies.push(movie);
+        user.budget -= 3
+        return await user.save();
+      }
+      return;
+    },
+    async RemoveMovieFromUser(_, args: { movieId: string; userId: String }) {
+      const user = await User.findById(args.userId).populate('rentedMovies');
+      const movie = await Movie.findById(args.movieId);
+      const idx = user.rentedMovies.findIndex(
+        (m) => String(m._id) === String(movie._id)
+      );
+      user.rentedMovies.splice(idx, 1);
+      user.budget += 3
       return await user.save();
     },
   },

@@ -4,6 +4,7 @@ import {
   GET_USER_BY_ID,
   GET_ALL_MOVIES,
   ADD_MOVIE_TO_USER,
+  REMOVE_MOVIE_FROM_USER,
 } from '../queries/queries';
 import Loading from './Loading';
 import MovieCard from './MovieCard';
@@ -27,15 +28,25 @@ function Catalog(props) {
   });
   const getMovies = useQuery(GET_ALL_MOVIES);
   let loading = getMovies.loading && getUserById.loading;
-  const [addMovieToUser, { data }] = useMutation(ADD_MOVIE_TO_USER);
 
-  function onClickHandler(movieId) {
-    addMovieToUser({
+  const [AddMovieToUser, addMovieObj] = useMutation(ADD_MOVIE_TO_USER);
+  const [RemoveMovieFromUser, removeMovieObj] = useMutation(
+    REMOVE_MOVIE_FROM_USER
+  );
+
+  function addMovie(movieId) {
+    AddMovieToUser({
       variables: { userId: getUserById.data.user.id, movieId: movieId },
     });
   }
 
-  if (data) {
+  function removeMovie(movieId) {
+    RemoveMovieFromUser({
+      variables: { userId: getUserById.data.user.id, movieId: movieId },
+    });
+  }
+
+  if (addMovieObj.data || removeMovieObj.data) {
     getUserById.refetch({ variables: { id: match.params.userId } });
   }
 
@@ -58,7 +69,7 @@ function Catalog(props) {
           {getUserById.data.user.rentedMovies.map((m) => (
             <MovieCard
               key={Math.random()}
-              onClickHandler={onClickHandler}
+              onClickHandler={removeMovie}
               movie={m}
             />
           ))}
@@ -71,7 +82,7 @@ function Catalog(props) {
         justify='center'
         alignItems='center'
       >
-        <Grid item style={{marginTop: '50px', width: '100vw', textAlign: 'center' }}>
+        <Grid item style={{ width: '100vw', textAlign: 'center' }}>
           <Typography variant='h4' style={{ color: 'whitesmoke' }}>
             Catalog:
           </Typography>
@@ -79,7 +90,7 @@ function Catalog(props) {
         {loading && <Loading />}
         {getMovies.data &&
           getMovies.data.movies.map((m) => (
-            <MovieCard onClickHandler={onClickHandler} key={m.id} movie={m} />
+            <MovieCard onClickHandler={addMovie} key={m.id} movie={m} />
           ))}
       </Grid>
     </>

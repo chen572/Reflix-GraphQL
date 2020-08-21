@@ -7,7 +7,7 @@ function UserBar(props) {
   return (
     <div className='bar-container'>
       <Typography style={{color: 'whitesmoke', margin: '15px'}} variant='h4'>{user.name}</Typography>
-      <Typography style={{color: 'whitesmoke', margin: '15px'}} variant='h4'>Budget: {user.budget}</Typography>
+      <Typography style={{color: 'whitesmoke', margin: '15px'}} variant='h4'>Budget: ${user.budget}</Typography>
     </div>
   );
 }

@@ -1,8 +1,14 @@
 import React from 'react';
-import { Card, CardActionArea, makeStyles, Grid } from '@material-ui/core';
-import Buttons from './Button';
+import {
+  Card,
+  CardActionArea,
+  makeStyles,
+  Grid,
+  Typography,
+} from '@material-ui/core';
+import { Redirect, useHistory } from 'react-router-dom';
 
-const useStyles = makeStyles({
+const useStylesCatalog = makeStyles({
   root: {
     maxWidth: 300,
     maxHeight: 400,
@@ -16,13 +22,19 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'black',
+    color: 'white',
   },
 });
 
 function MovieCard(props) {
-  const classes = useStyles();
-  const { movie, onClickHandler } = props;
-  console.log(` this is the movie id ${movie.id}`)
+  const classes = useStylesCatalog();
+  const { movie, onClickHandler, page } = props;
+  const { goBack } = useHistory();
+
+  if (page === 'info' && !movie) {
+    return <Redirect to={goBack()} />;
+  }
+
   return (
     <Grid item className={classes.root}>
       <Card>
@@ -30,15 +42,13 @@ function MovieCard(props) {
           onClick={() => onClickHandler(movie.id)}
           className={classes.actionArea}
         >
-          <img
-            className={classes.media}
-            src={movie.img}
-            alt={movie.id}
-          />
+          <img className={classes.media} src={movie.img} alt={movie.id} />
         </CardActionArea>
-        <CardActionArea className={classes.actionArea}>
-          <Buttons text='ADD' />
-        </CardActionArea>
+        {page !== 'info' && (
+          <CardActionArea className={classes.actionArea}>
+            <Typography variant='h4'>More Info</Typography>
+          </CardActionArea>
+        )}
       </Card>
     </Grid>
   );
