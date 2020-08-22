@@ -5,6 +5,7 @@ import Landing from './components/Landing';
 import Catalog from './components/Catalog.jsx';
 import NavBar from './components/NavBar';
 import MovieCard from './components/MovieCard';
+import MovieInfo from './components/MovieInfo';
 
 function App() {
 
@@ -20,8 +21,8 @@ function App() {
         />
         <Route
           exact
-          path='/movie/info'
-          render={() => <MovieCard page='info' />}
+          path='/movie/info/:movieId'
+          render={({ match }) => <MovieInfo match={match} />}
         />
       </div>
     </Router>

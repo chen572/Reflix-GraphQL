@@ -27,7 +27,11 @@ function Catalog(props) {
     variables: { id: match.params.userId },
   });
   const getMovies = useQuery(GET_ALL_MOVIES);
-  let loading = getMovies.loading && getUserById.loading;
+  let loading =
+    getMovies.loading &&
+    getUserById.loading &&
+    getMovies.data &&
+    getMovies.data.movies;
 
   const [AddMovieToUser, addMovieObj] = useMutation(ADD_MOVIE_TO_USER);
   const [RemoveMovieFromUser, removeMovieObj] = useMutation(
@@ -35,6 +39,9 @@ function Catalog(props) {
   );
 
   function addMovie(movieId) {
+    if (getUserById.data.user.budget - 3 < 0) {
+      return;
+    }
     AddMovieToUser({
       variables: { userId: getUserById.data.user.id, movieId: movieId },
     });
@@ -67,11 +74,7 @@ function Catalog(props) {
             </Typography>
           </Grid>
           {getUserById.data.user.rentedMovies.map((m) => (
-            <MovieCard
-              key={Math.random()}
-              onClickHandler={removeMovie}
-              movie={m}
-            />
+            <MovieCard key={m.movieId} onClickHandler={removeMovie} movie={m} />
           ))}
         </Grid>
       )}
@@ -89,9 +92,23 @@ function Catalog(props) {
         </Grid>
         {loading && <Loading />}
         {getMovies.data &&
-          getMovies.data.movies.map((m) => (
-            <MovieCard onClickHandler={addMovie} key={m.id} movie={m} />
-          ))}
+          getUserById.data &&
+          getMovies.data.movies.map((m) => {
+            if (
+              !getUserById.data.user.rentedMovies.find(
+                (t) => t.movieId === m.movieId
+              )
+            ) {
+              return (
+                <MovieCard
+                  onClickHandler={addMovie}
+                  key={Math.random()}
+                  movie={m}
+                />
+              );
+            }
+            return null;
+          })}
       </Grid>
     </>
   );

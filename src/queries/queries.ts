@@ -3,10 +3,12 @@ import { gql } from '@apollo/client';
 export const MOVIE_TILE_DATA = gql`
   fragment MovieTile on Movie {
     id
+    movieId
     title
     year
     descrShort
     img
+    backgroundImg
   }
 `;
 
@@ -20,7 +22,7 @@ export const GET_ALL_MOVIES = gql`
 `;
 
 export const GET_MOVIE_BY_ID = gql`
-  query GetMoveById($id: ID!) {
+  query GetMoveById($id: String!) {
     movie(id: $id) {
       ...MovieTile
     }
@@ -52,7 +54,7 @@ export const GET_USER_BY_ID = gql`
 `;
 
 export const ADD_MOVIE_TO_USER = gql`
-  mutation AddMovieToUser($userId: ID!, $movieId: ID!) {
+  mutation AddMovieToUser($userId: ID!, $movieId: String!) {
     AddMovieToUser(userId: $userId, movieId: $movieId) {
       id
     }
@@ -60,7 +62,7 @@ export const ADD_MOVIE_TO_USER = gql`
 `;
 
 export const REMOVE_MOVIE_FROM_USER = gql`
-  mutation RemoveMovieFromUser($userId: ID!, $movieId: ID!) {
+  mutation RemoveMovieFromUser($userId: ID!, $movieId: String!) {
     RemoveMovieFromUser(userId: $userId, movieId: $movieId) {
       id
     }

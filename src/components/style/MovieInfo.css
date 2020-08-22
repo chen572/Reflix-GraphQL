@@ -1,0 +1,21 @@
+/* .background {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  box-shadow:20px 20px 50px 10px black inset
+  z-index: 
+} */
+
+.background-img {
+  position: absolute;
+  width: 100vw;
+  height: 90vh;
+}
+
+.img-shadow {
+  position: absolute;
+  width: 100vw;
+  height: 90vh;
+  overflow: hidden;
+  box-shadow: 20px 20px 50px 40px black inset;
+}

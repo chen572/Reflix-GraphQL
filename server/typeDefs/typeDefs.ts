@@ -1,13 +1,14 @@
-import { gql } from 'apollo-server'
+import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
 
   type Movie {
-    id: ID!
+    id: ID
+    movieId: String!
     title: String!
-    isRented: Boolean!
-    year: Int!
+    year: String!
     img: String!
+    backgroundImg: String!
     descrShort: String!
   }
 
@@ -21,12 +22,12 @@ export const typeDefs = gql`
   type Query {
     movies: [Movie]
     users: [User]
-    movie(id: ID!): Movie
+    movie(id: String!): Movie
     user(id: ID!): User
   }
 
   type Mutation {
-    AddMovieToUser(userId: ID!, movieId: ID!): User
-    RemoveMovieFromUser(userId: ID!, movieId: ID!): User
+    AddMovieToUser(userId: ID!, movieId: String!): User
+    RemoveMovieFromUser(userId: ID!, movieId: String!): User
   }
-`
+`;

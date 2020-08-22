@@ -9,41 +9,44 @@ connect('mongodb://localhost/Reflix', {
 
 export const resolvers = {
   Query: {
-    movies(): DocumentQuery<Movie[], Movie> {
-      return Movie.find({});
+    movies(_, __, { dataSources }) {
+      return dataSources.movieAPI.getAllMovies();
     },
     users(): DocumentQuery<User[], User> {
       return User.find({});
     },
-    movie(_, args: Movie): DocumentQuery<Movie, Movie> {
-      return Movie.findById(args.id);
+    movie(_, args: Movie, { dataSources }) {
+      return dataSources.movieAPI.getMovieByMovieId(args);
     },
     user(_, args: User): DocumentQuery<User, User> {
       return User.findById(args.id).populate('rentedMovies');
     },
   },
   Mutation: {
-    async AddMovieToUser(_, args: { movieId: String; userId: String }) {
-      const user = await User.findById(args.userId).populate('rentedMovies');
-      const movie = await Movie.findById(args.movieId);
+    async AddMovieToUser(_, { movieId, userId }, { dataSources }) {
+      const user = await User.findById(userId).populate('rentedMovies');
+      const isMovieSaved = await Movie.findOne({ movieId: movieId });
+      const movie = isMovieSaved
+        ? isMovieSaved
+        : await new Movie(await dataSources.movieAPI.getMovieByMovieId({ id: movieId })).save()
       const isMovieRented = user.rentedMovies.find(
         (m) => String(m._id) === String(movie._id)
       );
       if (!isMovieRented) {
         user.rentedMovies.push(movie);
-        user.budget -= 3
+        user.budget -= 3;
         return await user.save();
       }
       return;
     },
-    async RemoveMovieFromUser(_, args: { movieId: string; userId: String }) {
-      const user = await User.findById(args.userId).populate('rentedMovies');
-      const movie = await Movie.findById(args.movieId);
+    async RemoveMovieFromUser(_, { movieId, userId }, { dataSources }) {
+      const user = await User.findById(userId).populate('rentedMovies');
+      const movie = await Movie.findOne({ movieId: movieId });
       const idx = user.rentedMovies.findIndex(
         (m) => String(m._id) === String(movie._id)
       );
       user.rentedMovies.splice(idx, 1);
-      user.budget += 3
+      user.budget += 3;
       return await user.save();
     },
   },
