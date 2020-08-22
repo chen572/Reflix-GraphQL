@@ -7,20 +7,10 @@ import {
   REMOVE_MOVIE_FROM_USER,
 } from '../queries/queries';
 import Loading from './Loading';
-import MovieCard from './MovieCard';
-import { Grid, makeStyles, Typography, Button } from '@material-ui/core';
 import UserBar from './UserBar';
-
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    height: '100%',
-    margin: 0,
-  },
-});
+import CatalogMovieList from './CatalogMovieList';
 
 function Catalog(props) {
-  const classes = useStyles();
   const { match } = props;
   const [page, setPage] = useState(1);
 
@@ -56,8 +46,14 @@ function Catalog(props) {
     });
   }
 
-  function moreMovies() {
+  function next() {
     setPage(page + 1);
+  }
+
+  function prev() {
+    if (page !== 1) {
+      setPage(page - 1);
+    }
   }
 
   if (addMovieObj.data || removeMovieObj.data) {
@@ -66,59 +62,29 @@ function Catalog(props) {
 
   return (
     <>
+      {loading && <Loading />}
       <UserBar user={!getUserById.loading && getUserById.data.user} />
       {getUserById.data && getUserById.data.user.rentedMovies.length && (
-        <Grid
-          container
-          className={classes.root}
-          spacing={2}
-          justify='center'
-          alignItems='center'
-        >
-          <Grid item style={{ width: '100vw', textAlign: 'center' }}>
-            <Typography variant='h4' style={{ color: 'whitesmoke' }}>
-              Rented:
-            </Typography>
-          </Grid>
-          {getUserById.data.user.rentedMovies.map((m) => (
-            <MovieCard key={m.movieId} onClickHandler={removeMovie} movie={m} />
-          ))}
-        </Grid>
+        <CatalogMovieList
+          movieList={getUserById.data.user.rentedMovies}
+          text='Rented'
+          onClickHandler={removeMovie}
+        />
       )}
-      <Grid
-        container
-        className={classes.root}
-        spacing={2}
-        justify='center'
-        alignItems='center'
-      >
-        <Grid item style={{ width: '100vw', textAlign: 'center' }}>
-          <Typography variant='h4' style={{ color: 'whitesmoke' }}>
-            Catalog:
-          </Typography>
-        </Grid>
-        {loading && <Loading />}
-        {getMovies.data &&
-          getUserById.data &&
-          getMovies.data.movies.map((m) => {
-            if (
+      {getMovies.data && getUserById.data && (
+        <CatalogMovieList
+          movieList={getMovies.data.movies.filter(
+            (m) =>
               m &&
               !getUserById.data.user.rentedMovies.find(
                 (t) => t.movieId === m.movieId
               )
-            ) {
-              return (
-                <MovieCard
-                  onClickHandler={addMovie}
-                  key={Math.random()}
-                  movie={m}
-                />
-              );
-            }
-            return null;
-          })}
-        <Button onClick={moreMovies}>More</Button>
-      </Grid>
+          )}
+          onClickHandler={addMovie}
+          text='Catalog'
+          pagination={{ next, prev }}
+        />
+      )}
     </>
   );
 }

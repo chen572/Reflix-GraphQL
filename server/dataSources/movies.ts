@@ -23,9 +23,7 @@ class MovieAPI extends RESTDataSource {
   }
 
   async getAllMovies(page) {
-    console.log(page)
     const response = await this.get('discover/movie', { page });
-    console.log(response.page)
     return Array.isArray(response.results)
       ? response.results.map((movie) => this.movieReducer(movie))
       : [];
