@@ -13,8 +13,8 @@ export const MOVIE_TILE_DATA = gql`
 `;
 
 export const GET_ALL_MOVIES = gql`
-  query GetAllMovies {
-    movies {
+  query GetAllMovies($page: Int!) {
+    movies(page: $page) {
       ...MovieTile
     }
   }

@@ -9,8 +9,8 @@ connect('mongodb://localhost/Reflix', {
 
 export const resolvers = {
   Query: {
-    movies(_, __, { dataSources }) {
-      return dataSources.movieAPI.getAllMovies();
+    movies(_, { page }, { dataSources }) {
+      return dataSources.movieAPI.getAllMovies(page);
     },
     users(): DocumentQuery<User[], User> {
       return User.find({});

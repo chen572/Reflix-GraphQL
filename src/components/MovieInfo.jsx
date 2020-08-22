@@ -38,10 +38,21 @@ function MovieInfo(props) {
   });
 
   if (loading) {
-    return <Loading />;
+    return (
+      <div
+        style={{
+          width: '50vw',
+          margin: 'auto',
+          marginTop: '35vh',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Loading />;
+      </div>
+    );
   }
 
-  console.log(loading, data);
   return (
     <>
       <img

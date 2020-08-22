@@ -8,6 +8,7 @@ class MovieAPI extends RESTDataSource {
 
   willSendRequest(request: RequestOptions) {
     request.params.set('api_key', process.env.API_KEY);
+    request.params.set('include_adult', 'false');
   }
 
   movieReducer(movie) {
@@ -21,8 +22,10 @@ class MovieAPI extends RESTDataSource {
     };
   }
 
-  async getAllMovies() {
-    const response = await this.get('discover/movie');
+  async getAllMovies(page) {
+    console.log(page)
+    const response = await this.get('discover/movie', { page });
+    console.log(response.page)
     return Array.isArray(response.results)
       ? response.results.map((movie) => this.movieReducer(movie))
       : [];

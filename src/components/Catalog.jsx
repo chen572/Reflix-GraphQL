@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import {
   GET_USER_BY_ID,
@@ -8,7 +8,7 @@ import {
 } from '../queries/queries';
 import Loading from './Loading';
 import MovieCard from './MovieCard';
-import { Grid, makeStyles, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography, Button } from '@material-ui/core';
 import UserBar from './UserBar';
 
 const useStyles = makeStyles({
@@ -22,11 +22,14 @@ const useStyles = makeStyles({
 function Catalog(props) {
   const classes = useStyles();
   const { match } = props;
+  const [page, setPage] = useState(1);
 
   const getUserById = useQuery(GET_USER_BY_ID, {
     variables: { id: match.params.userId },
   });
-  const getMovies = useQuery(GET_ALL_MOVIES);
+  const getMovies = useQuery(GET_ALL_MOVIES, {
+    variables: { page },
+  });
   let loading =
     getMovies.loading &&
     getUserById.loading &&
@@ -51,6 +54,10 @@ function Catalog(props) {
     RemoveMovieFromUser({
       variables: { userId: getUserById.data.user.id, movieId: movieId },
     });
+  }
+
+  function moreMovies() {
+    setPage(page + 1);
   }
 
   if (addMovieObj.data || removeMovieObj.data) {
@@ -95,6 +102,7 @@ function Catalog(props) {
           getUserById.data &&
           getMovies.data.movies.map((m) => {
             if (
+              m &&
               !getUserById.data.user.rentedMovies.find(
                 (t) => t.movieId === m.movieId
               )
@@ -109,6 +117,7 @@ function Catalog(props) {
             }
             return null;
           })}
+        <Button onClick={moreMovies}>More</Button>
       </Grid>
     </>
   );

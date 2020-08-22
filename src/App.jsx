@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Landing from './components/Landing';
 import Catalog from './components/Catalog.jsx';
 import NavBar from './components/NavBar';
-import MovieCard from './components/MovieCard';
 import MovieInfo from './components/MovieInfo';
 
 function App() {

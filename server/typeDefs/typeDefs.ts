@@ -20,7 +20,7 @@ export const typeDefs = gql`
   }
 
   type Query {
-    movies: [Movie]
+    movies(page: Int!): [Movie]
     users: [User]
     movie(id: String!): Movie
     user(id: ID!): User
