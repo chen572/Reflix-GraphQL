@@ -1,6 +1,16 @@
 import { User } from './../models/User';
 import { Movie } from './../models/Movie';
-import { DocumentQuery, connect } from 'mongoose';
+import { DocumentQuery, connect, Types } from 'mongoose';
+import MovieAPI from '../dataSources/movies';
+
+interface DataSources {
+  movieAPI: MovieAPI 
+}
+
+interface Ids {
+  movieId: String
+  userId: Types.ObjectId
+}
 
 connect('mongodb://localhost/Reflix', {
   useNewUrlParser: true,
@@ -9,13 +19,13 @@ connect('mongodb://localhost/Reflix', {
 
 export const resolvers = {
   Query: {
-    movies(_, { page }, { dataSources }) {
+    movies(_, { page }: { page: Number }, { dataSources }: { dataSources: DataSources }) {
       return dataSources.movieAPI.getAllMovies(page);
     },
     users(): DocumentQuery<User[], User> {
       return User.find({});
     },
-    movie(_, args: Movie, { dataSources }) {
+    movie(_, args, { dataSources }: { dataSources: DataSources }) {
       return dataSources.movieAPI.getMovieByMovieId(args);
     },
     user(_, args: User): DocumentQuery<User, User> {
@@ -23,12 +33,14 @@ export const resolvers = {
     },
   },
   Mutation: {
-    async AddMovieToUser(_, { movieId, userId }, { dataSources }) {
+    async AddMovieToUser(_, { movieId, userId }: Ids, { dataSources }: { dataSources: DataSources }) {
       const user = await User.findById(userId).populate('rentedMovies');
       const isMovieSaved = await Movie.findOne({ movieId: movieId });
       const movie = isMovieSaved
         ? isMovieSaved
-        : await new Movie(await dataSources.movieAPI.getMovieByMovieId({ id: movieId })).save()
+        : await new Movie(
+            await dataSources.movieAPI.getMovieByMovieId({ id: movieId })
+          ).save();
       const isMovieRented = user.rentedMovies.find(
         (m) => String(m._id) === String(movie._id)
       );
@@ -39,7 +51,7 @@ export const resolvers = {
       }
       return;
     },
-    async RemoveMovieFromUser(_, { movieId, userId }, { dataSources }) {
+    async RemoveMovieFromUser(_, { movieId, userId }: Ids, { dataSources }: { dataSources: DataSources}) {
       const user = await User.findById(userId).populate('rentedMovies');
       const movie = await Movie.findOne({ movieId: movieId });
       const idx = user.rentedMovies.findIndex(

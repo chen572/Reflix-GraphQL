@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 import { GET_ALL_USERS } from '../queries/queries';
 import { Link } from 'react-router-dom';
 
-function Landing(props) {
+function Landing() {
   const { loading, data } = useQuery(GET_ALL_USERS);
 
   function getRandomColor() {

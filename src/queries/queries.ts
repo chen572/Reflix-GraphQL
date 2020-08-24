@@ -2,7 +2,6 @@ import { gql } from '@apollo/client';
 
 export const MOVIE_TILE_DATA = gql`
   fragment MovieTile on Movie {
-    id
     movieId
     title
     year

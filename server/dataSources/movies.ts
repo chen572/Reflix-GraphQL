@@ -1,5 +1,14 @@
 import { RESTDataSource, RequestOptions } from 'apollo-datasource-rest';
 
+interface MovieResponse {
+  id: string;
+  title: string;
+  release_date: string;
+  poster_path: string;
+  backdrop_path: string;
+  overview: string;
+}
+
 class MovieAPI extends RESTDataSource {
   constructor() {
     super();
@@ -11,7 +20,7 @@ class MovieAPI extends RESTDataSource {
     request.params.set('include_adult', 'false');
   }
 
-  movieReducer(movie) {
+  movieReducer(movie: MovieResponse) {
     return {
       movieId: movie.id,
       title: movie.title,
@@ -22,15 +31,15 @@ class MovieAPI extends RESTDataSource {
     };
   }
 
-  async getAllMovies(page) {
+  async getAllMovies(page: Number) {
     const response = await this.get('discover/movie', { page });
     return Array.isArray(response.results)
-      ? response.results.map((movie) => this.movieReducer(movie))
+      ? response.results.map((movie: MovieResponse) => this.movieReducer(movie))
       : [];
   }
 
-  async getMovieByMovieId({ id }) {
-    const response = await this.get(`movie/${id}`);
+  async getMovieByMovieId({ id }: { id: String }) {
+    const response: MovieResponse = await this.get(`movie/${id}`);
     return this.movieReducer(response);
   }
 }

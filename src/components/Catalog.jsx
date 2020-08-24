@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import {
   GET_USER_BY_ID,
@@ -12,7 +12,17 @@ import CatalogMovieList from './CatalogMovieList';
 
 function Catalog(props) {
   const { match } = props;
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(
+    localStorage.getItem(match.params.userId)
+      ? Number(localStorage.getItem(match.params.userId))
+      : 1
+  );
+
+  useEffect(() => {
+    return () => {
+      localStorage.setItem(match.params.userId, page);
+    };
+  });
 
   const getUserById = useQuery(GET_USER_BY_ID, {
     variables: { id: match.params.userId },
@@ -20,17 +30,13 @@ function Catalog(props) {
   const getMovies = useQuery(GET_ALL_MOVIES, {
     variables: { page },
   });
-  let loading =
-    getMovies.loading &&
-    getUserById.loading &&
-    getMovies.data &&
-    getMovies.data.movies;
+
+  let loading = getMovies.loading && getUserById.loading;
 
   const [AddMovieToUser, addMovieObj] = useMutation(ADD_MOVIE_TO_USER);
   const [RemoveMovieFromUser, removeMovieObj] = useMutation(
     REMOVE_MOVIE_FROM_USER
   );
-
   function addMovie(movieId) {
     if (getUserById.data.user.budget - 3 < 0) {
       return;
