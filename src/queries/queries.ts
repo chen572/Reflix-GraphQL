@@ -21,6 +21,15 @@ export const GET_ALL_MOVIES = gql`
   ${MOVIE_TILE_DATA}
 `;
 
+export const GET_MOVIES_BY_TITLE = gql`
+  query GetMoviesByTitle($query: String!, $page: Int!) {
+    searchMovies(query: $query, page: $page) {
+      ...MovieTile
+    }
+  }
+  ${MOVIE_TILE_DATA}
+`
+
 export const GET_MOVIE_BY_ID = gql`
   query GetMoveById($id: String!) {
     movie(id: $id) {

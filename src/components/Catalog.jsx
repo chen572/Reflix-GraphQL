@@ -5,6 +5,7 @@ import {
   GET_ALL_MOVIES,
   ADD_MOVIE_TO_USER,
   REMOVE_MOVIE_FROM_USER,
+  GET_MOVIES_BY_TITLE,
 } from '../queries/queries';
 import Loading from './Loading';
 import UserBar from './UserBar';
@@ -13,18 +14,17 @@ import CatalogMovieList from './CatalogMovieList';
 function Catalog(props) {
   const { match } = props;
   const [page, setPage] = useState(1);
+  // const [query, setQuery] = useState('');
 
   const getUserById = useQuery(GET_USER_BY_ID, {
     variables: { id: match.params.userId },
   });
-  const getMovies = useQuery(GET_ALL_MOVIES, {
-    variables: { page },
-  });
+  const getMovies = useQuery(GET_ALL_MOVIES, { variables: { page } })
+    // : useQuery(GET_MOVIES_BY_TITLE, { variables: { page, query } });
+
   let loading =
     getMovies.loading &&
-    getUserById.loading &&
-    getMovies.data &&
-    getMovies.data.movies;
+    getUserById.loading 
 
   const [AddMovieToUser, addMovieObj] = useMutation(ADD_MOVIE_TO_USER);
   const [RemoveMovieFromUser, removeMovieObj] = useMutation(
@@ -62,7 +62,7 @@ function Catalog(props) {
 
   return (
     <>
-      {loading && <Loading />}
+    {loading && <Loading />}
       <UserBar user={!getUserById.loading && getUserById.data.user} />
       {getUserById.data && getUserById.data.user.rentedMovies.length && (
         <CatalogMovieList
@@ -70,7 +70,7 @@ function Catalog(props) {
           text='Rented'
           onClickHandler={removeMovie}
         />
-      )}
+        )}
       {getMovies.data && getUserById.data && (
         <CatalogMovieList
           movieList={getMovies.data.movies.filter(

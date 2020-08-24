@@ -22,11 +22,20 @@ class MovieAPI extends RESTDataSource {
     };
   }
 
+  returnArr(results) {
+    return Array.isArray(results)
+      ? results.map((movie) => this.movieReducer(movie))
+      : [];
+  }
+
   async getAllMovies(page) {
     const response = await this.get('discover/movie', { page });
-    return Array.isArray(response.results)
-      ? response.results.map((movie) => this.movieReducer(movie))
-      : [];
+    return this.returnArr(response.results);
+  }
+
+  async getMoviesByName(query, page) {
+    const response = await this.get('search/movie', { query, page });
+    return this.returnArr(response.results);
   }
 
   async getMovieByMovieId({ id }) {

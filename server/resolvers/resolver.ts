@@ -9,6 +9,9 @@ connect('mongodb://localhost/Reflix', {
 
 export const resolvers = {
   Query: {
+    searchMovies(_, { query, page }, { dataSources }) {
+      return dataSources.movieAPI.getMoviesByName(query, page);
+    },
     movies(_, { page }, { dataSources }) {
       return dataSources.movieAPI.getAllMovies(page);
     },
@@ -28,7 +31,9 @@ export const resolvers = {
       const isMovieSaved = await Movie.findOne({ movieId: movieId });
       const movie = isMovieSaved
         ? isMovieSaved
-        : await new Movie(await dataSources.movieAPI.getMovieByMovieId({ id: movieId })).save()
+        : await new Movie(
+            await dataSources.movieAPI.getMovieByMovieId({ id: movieId })
+          ).save();
       const isMovieRented = user.rentedMovies.find(
         (m) => String(m._id) === String(movie._id)
       );
