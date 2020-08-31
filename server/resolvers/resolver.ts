@@ -2,6 +2,8 @@ import { User } from './../models/User';
 import { Movie } from './../models/Movie';
 import { DocumentQuery, connect, Types } from 'mongoose';
 import MovieAPI from '../dataSources/movies';
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 interface DataSources {
   movieAPI: MovieAPI 
@@ -12,7 +14,7 @@ interface Ids {
   userId: Types.ObjectId
 }
 
-connect('mongodb://localhost/Reflix', {
+connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
