@@ -1,32 +1,66 @@
 import { User } from './../models/User';
 import { Movie } from './../models/Movie';
-import { DocumentQuery, connect } from 'mongoose';
+import { DocumentQuery, connect, Types } from 'mongoose';
+import MovieAPI from '../dataSources/movies';
+import * as dotenv from 'dotenv'
+dotenv.config()
 
-connect('mongodb://localhost/Reflix', {
+interface DataSources {
+  movieAPI: MovieAPI 
+}
+
+interface Ids {
+  movieId: String
+  userId: Types.ObjectId
+}
+
+connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 export const resolvers = {
   Query: {
-    movies(): DocumentQuery<Movie[], Movie> {
-      return Movie.find({});
+    movies(_, { page }: { page: Number }, { dataSources }: { dataSources: DataSources }) {
+      return dataSources.movieAPI.getAllMovies(page);
     },
     users(): DocumentQuery<User[], User> {
       return User.find({});
     },
-    movie(_, args: Movie): DocumentQuery<Movie, Movie> {
-      return Movie.findById(args.id);
+    movie(_, args, { dataSources }: { dataSources: DataSources }) {
+      return dataSources.movieAPI.getMovieByMovieId(args);
     },
     user(_, args: User): DocumentQuery<User, User> {
       return User.findById(args.id).populate('rentedMovies');
     },
   },
   Mutation: {
-    async addMovieToUser(_, args: { movieId: String; userId: String }) {
-      const movie = await Movie.findById(args.movieId);
-      const user = await User.findById(args.userId);
-      user.rentedMovies.push(movie);
+    async AddMovieToUser(_, { movieId, userId }: Ids, { dataSources }: { dataSources: DataSources }) {
+      const user = await User.findById(userId).populate('rentedMovies');
+      const isMovieSaved = await Movie.findOne({ movieId: movieId });
+      const movie = isMovieSaved
+        ? isMovieSaved
+        : await new Movie(
+            await dataSources.movieAPI.getMovieByMovieId({ id: movieId })
+          ).save();
+      const isMovieRented = user.rentedMovies.find(
+        (m) => String(m._id) === String(movie._id)
+      );
+      if (!isMovieRented) {
+        user.rentedMovies.push(movie);
+        user.budget -= 3;
+        return await user.save();
+      }
+      return;
+    },
+    async RemoveMovieFromUser(_, { movieId, userId }: Ids, { dataSources }: { dataSources: DataSources}) {
+      const user = await User.findById(userId).populate('rentedMovies');
+      const movie = await Movie.findOne({ movieId: movieId });
+      const idx = user.rentedMovies.findIndex(
+        (m) => String(m._id) === String(movie._id)
+      );
+      user.rentedMovies.splice(idx, 1);
+      user.budget += 3;
       return await user.save();
     },
   },

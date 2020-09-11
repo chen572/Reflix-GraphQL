@@ -6,8 +6,18 @@ import * as serviceWorker from "./serviceWorker";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "http://localhost:4000/",
-  cache: new InMemoryCache()
+  uri: "/graphql",
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    query: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'ignore'
+    },
+    watchQuery: {
+      fetchPolicy: 'no-cache',
+      errorPolicy: 'ignore'
+    }
+  }
 });
 
 ReactDOM.render(

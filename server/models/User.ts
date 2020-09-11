@@ -4,7 +4,7 @@ import { Schema, model, Document } from 'mongoose';
 export interface User extends Document {
   name: String;
   budget: number;
-  rentedMovies: [Movie];
+  rentedMovies: [Movie]
 }
 
 const userSchema = new Schema<User>({
