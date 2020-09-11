@@ -27,6 +27,7 @@ export const typeDefs = gql`
   }
 
   type Mutation {
+    AddUser(name: String!): User
     AddMovieToUser(userId: ID!, movieId: String!): User
     RemoveMovieFromUser(userId: ID!, movieId: String!): User
   }

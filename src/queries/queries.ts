@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from '@apollo/client'
 
 export const MOVIE_TILE_DATA = gql`
   fragment MovieTile on Movie {
@@ -9,7 +9,7 @@ export const MOVIE_TILE_DATA = gql`
     img
     backgroundImg
   }
-`;
+`
 
 export const GET_ALL_MOVIES = gql`
   query GetAllMovies($page: Int!) {
@@ -18,7 +18,7 @@ export const GET_ALL_MOVIES = gql`
     }
   }
   ${MOVIE_TILE_DATA}
-`;
+`
 
 export const GET_MOVIE_BY_ID = gql`
   query GetMoveById($id: String!) {
@@ -27,7 +27,7 @@ export const GET_MOVIE_BY_ID = gql`
     }
   }
   ${MOVIE_TILE_DATA}
-`;
+`
 
 export const GET_ALL_USERS = gql`
   query GetAllUsers {
@@ -36,7 +36,7 @@ export const GET_ALL_USERS = gql`
       name
     }
   }
-`;
+`
 
 export const GET_USER_BY_ID = gql`
   query GetUserById($id: ID!) {
@@ -50,7 +50,15 @@ export const GET_USER_BY_ID = gql`
     }
   }
   ${MOVIE_TILE_DATA}
-`;
+`
+
+export const ADD_USER = gql`
+  mutation AddUser($name: String!) {
+    AddUser(name: $name) {
+      id
+    }
+  }
+`
 
 export const ADD_MOVIE_TO_USER = gql`
   mutation AddMovieToUser($userId: ID!, $movieId: String!) {
@@ -58,7 +66,7 @@ export const ADD_MOVIE_TO_USER = gql`
       id
     }
   }
-`;
+`
 
 export const REMOVE_MOVIE_FROM_USER = gql`
   mutation RemoveMovieFromUser($userId: ID!, $movieId: String!) {
@@ -66,4 +74,4 @@ export const REMOVE_MOVIE_FROM_USER = gql`
       id
     }
   }
-`;
+`

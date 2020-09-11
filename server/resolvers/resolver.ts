@@ -35,6 +35,9 @@ export const resolvers = {
     },
   },
   Mutation: {
+    async AddUser(_, { name }: { name: String }, { dataSources }: { dataSources: DataSources }) {
+      return await new User({ name, budget: 10, rentedMovies: [] }).save()
+    },
     async AddMovieToUser(_, { movieId, userId }: Ids, { dataSources }: { dataSources: DataSources }) {
       const user = await User.findById(userId).populate('rentedMovies');
       const isMovieSaved = await Movie.findOne({ movieId: movieId });
